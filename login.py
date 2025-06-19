@@ -18,7 +18,7 @@ users = {}
 def check(name, password, login):
     global access
     if name.get() in list(users):
-        if users[name.get()][0] == password.get():
+        if users[name.get()][0] == hashlib.sha256(password.get().encode('utf-8')).hexdigest():
             access = users[name.get()][1]
             login.destroy()
         else:

@@ -2,3 +2,4 @@
 /.idea
 base.db
 /log
+/auto_py_to_exe

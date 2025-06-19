@@ -1,6 +1,7 @@
 # pip install tkcalendar
 
 import os
+import sys
 import sqlite3
 from datetime import datetime
 from login import loging
@@ -16,6 +17,7 @@ from tkcalendar import DateEntry
 from lang import main_ru, main_en
 from theme import apply_theme
 from language import load_language, load_theme
+from create_base import create_base
 
 dirname = os.path.dirname(__file__)
 os.chdir(dirname)
@@ -171,9 +173,34 @@ def main_window(access):
     
     tk.mainloop()
 
+def is_base_db_in_executable_dir():
+    
+    executable_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+    
+    base_db_path = os.path.join(executable_dir, 'base.db')
+    print(os.path.isfile(base_db_path))
+    return os.path.isfile(base_db_path)
+
+def check_table_exists(cursor, table_name):
+    cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}';")
+    return cursor.fetchone() is not None
+
 
 def start():
+    
+    # Проверяем наличие базы и таблицы users
+    if not is_base_db_in_executable_dir():
+        create_base()  # Создаём базу, если её нет
+    else:
+        # Если база есть, проверяем наличие таблицы users
+        connection = sqlite3.connect("base.db")
+        cursor = connection.cursor()
+        if not check_table_exists(cursor, "users") or not check_table_exists(cursor, "tab_1"):
+            create_base()  # Пересоздаём базу, если таблицы нет
+        connection.close()
+        
     a = loging(log_file)
+    
     if a in ('a', 'b', 'c'):
         main_window(a)
 

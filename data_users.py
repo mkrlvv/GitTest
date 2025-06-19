@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 from tkinter import *
 
 
@@ -6,7 +7,7 @@ def save(table, NAME_Entry, PASSWORD_Entry, ACCESS_Combobox, log_file, connectio
     name = NAME_Entry.get()
     password = PASSWORD_Entry.get()
     access = ACCESS_Combobox.get()
-    cursor.execute("INSERT INTO users(name, password, access) VALUES (?, ?, ?)", (name, password, access))
+    cursor.execute("INSERT INTO users(name, password, access) VALUES (?, ?, ?)", (name, hashlib.sha256(password).encode('utf-8')).hexdigest(), access)
     connection.commit()
     for item in table.get_children():
         table.delete(item)
@@ -48,7 +49,7 @@ def update(table, id, NAME_Entry, PASSWORD_Entry, ACCESS_Combobox, log_file, con
     access = ACCESS_Combobox.get()
 
     cursor.execute("UPDATE users SET name = ?, password = ?, access = ? WHERE ID = ?;", 
-                  (name, password, access, table.item(id)['values'][0]))
+                  (name, hashlib.sha256(password.encode('utf-8')).hexdigest(), access, table.item(id)['values'][0]))
                   
     log_file.write(f"{datetime.datetime.now().strftime('%d.%m.%Y_%H.%M.%S')}: Пользователь {id[0]} изменен \n")
     connection.commit()
