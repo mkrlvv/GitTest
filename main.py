@@ -61,7 +61,7 @@ def main_window(access):
     
     global open_windows, tk
     lang = main_ru if load_language() == "ru" else main_en
-    
+        
     tk = Tk()
     
     open_windows[tk] = lambda: main_window(access)
@@ -188,15 +188,13 @@ def check_table_exists(cursor, table_name):
 
 def start():
     
-    # Проверяем наличие базы и таблицы users
     if not is_base_db_in_executable_dir():
-        create_base()  # Создаём базу, если её нет
+        create_base() 
     else:
-        # Если база есть, проверяем наличие таблицы users
         connection = sqlite3.connect("base.db")
         cursor = connection.cursor()
         if not check_table_exists(cursor, "users") or not check_table_exists(cursor, "tab_1"):
-            create_base()  # Пересоздаём базу, если таблицы нет
+            create_base() 
         connection.close()
         
     a = loging(log_file)

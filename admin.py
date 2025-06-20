@@ -27,38 +27,41 @@ def show_admin_panel(log_file, connection):
     
     NAME_Label = Label(admin_panel, text=lang[1], font=("Arial", 13))
     PASSWORD_Label = Label(admin_panel, text=lang[2], font=("Arial", 13))
+    CONFIM_PASSWORD = Label(admin_panel, text=lang[8], font=("Arial", 13))
     ACCESS_Label = Label(admin_panel, text=lang[3], font=("Arial", 13))
     NAME_Entry = Entry(admin_panel, font=("Arial", 13))
     PASSWORD_Entry = Entry(admin_panel, font=("Arial", 13))
+    CONFIRM_Entry = Entry(admin_panel, font=("Arial", 13))
     ACCESS_Combobox = ttk.Combobox(admin_panel, values=("a", "b", "c"))
     
-    SAVE = Button(admin_panel, text=lang[4], command=lambda: save(table, NAME_Entry, PASSWORD_Entry, ACCESS_Combobox, log_file, connection, cursor), font=("Arial", 13))
-    UPDATE = Button(admin_panel, text=lang[5], command=lambda: edit(table, NAME_Entry, PASSWORD_Entry, ACCESS_Combobox,SAVE, log_file, connection, cursor, UPDATE, DELETE), font=("Arial", 13))
+    SAVE = Button(admin_panel, text=lang[4], command=lambda: save(table, NAME_Entry, PASSWORD_Entry, CONFIRM_Entry, ACCESS_Combobox, log_file, connection, cursor, lang), font=("Arial", 13))
+    UPDATE = Button(admin_panel, text=lang[5], command=lambda: edit(table, NAME_Entry, PASSWORD_Entry, CONFIRM_Entry, ACCESS_Combobox,SAVE, log_file, connection, cursor, UPDATE, DELETE, lang), font=("Arial", 13))
     DELETE = Button(admin_panel, text=lang[6], command=lambda: delete(table, log_file, connection, cursor), font=("Arial", 13))
     # BLOCKED = Button(admin_panel,text=lang[7],command= lambda:  ())
 
     NAME_Label.place(x=10, y=30)
     PASSWORD_Label.place(x=10, y=70)
-    ACCESS_Label.place(x=10, y=110)
+    CONFIM_PASSWORD.place(x=10, y=110)
+    ACCESS_Label.place(x=10, y=140)
+    
     NAME_Entry.place(x=140, y=30)
     PASSWORD_Entry.place(x=140, y=70)
-    ACCESS_Combobox.place(x=140, y=110)
+    CONFIRM_Entry.place(x=140, y=110)
+    ACCESS_Combobox.place(x=140, y=140)
     
-    SAVE.place(x=10, y=150)
-    UPDATE.place(x=110, y=150)
-    DELETE.place(x=10, y=190)
+    SAVE.place(x=10, y=180)
+    UPDATE.place(x=110, y=180)
+    DELETE.place(x=10, y=220)
     # BLOCKED.place(x=110,y=190)
     
-    columns = ("ID", "NAME", "PASSWORD", "ACCESS")
+    columns = ("ID", "NAME", "ACCESS")
     table = ttk.Treeview(admin_panel, columns=columns, show="headings")
     table.heading("ID", text="id", anchor="center")
     table.heading("NAME", text=lang[1], anchor="center")
-    table.heading("PASSWORD", text=lang[2], anchor="center")
     table.heading("ACCESS", text=lang[3])
     
     table.column("ID", width=10, anchor="w")
     table.column("NAME", width=50, anchor="w")
-    table.column("PASSWORD", width=75, anchor="w")
     table.column("ACCESS", width=100, anchor="w")
 
     table.place(x=380, y=33, width=500, height=350)
@@ -69,7 +72,7 @@ def show_admin_panel(log_file, connection):
     connection.commit()
 
     for data in pipls:
-        table.insert("", END, values=data)
+        table.insert("", END, values=(data[:2] + tuple(data[-1])))
 
     setup_sorting(table)
     

@@ -13,7 +13,7 @@ def create_base():
     for z in zayavki:
         cursor.execute("INSERT INTO tab_1 (name, marka, vid, price, date) VALUES (?, ?, ?, ?, ?)", (cezar(z[0]), cezar(z[1]), cezar(z[2]), cezar(str(z[3])), cezar(z[4])))
     cursor.execute("CREATE TABLE IF NOT EXISTS users(ID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, password TEXT, access TEXT)")
-    users = users = (
+    users = (
     ("admin", hashlib.sha256("admin".encode('utf-8')).hexdigest(), "a"),
     ("manager", hashlib.sha256("manager".encode('utf-8')).hexdigest(), "b"),
     ("user", hashlib.sha256("".encode('utf-8')).hexdigest(), "c")
